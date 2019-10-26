@@ -6,16 +6,20 @@
     "@babel/plugin-proposal-decorators": "^7.6.0",
     "antd": "^3.24.2",
     "babel-plugin-import": "^1.12.2",
+    "classnames": "^2.2.6",
     "customize-cra": "^0.8.0",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
+    "lodash": "^4.17.15",
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
+    "open-color": "^1.7.0",
     "react": "^16.11.0",
     "react-app-rewired": "^2.1.4",
     "react-dom": "^16.11.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "uniqid": "^5.0.3"
   },
   "scripts": {
     "start": "react-app-rewired start",

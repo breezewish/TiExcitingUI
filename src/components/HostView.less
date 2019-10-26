@@ -1,0 +1,33 @@
+@import '~open-color/open-color.less';
+
+.host-view {
+  &-vis-dc {
+    border: 2px dotted #CCC;
+    margin: 16px;
+    &-title {
+      margin: 16px;
+    }
+    &-content {
+      margin: 16px;
+    }
+  }
+
+  &-vis-host {
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &-content {
+      flex: 1;
+    }
+
+    &.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: @oc-green-0;
+      }
+    }
+  }
+}
