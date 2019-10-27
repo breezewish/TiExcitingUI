@@ -19,7 +19,7 @@ class Progress extends React.Component {
 
     socket.on('sync', (res) => {
       console.log('sync', res);
-      this.setState({ tasks: res.steps });
+      this.setState({ tasks: res.task.steps });
     });
 
     socket.on('task', (res) => {
