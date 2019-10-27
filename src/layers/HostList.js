@@ -11,44 +11,19 @@ class LayerHostList extends React.Component {
     hostChecks: {},
   };
 
-  handleHostCheckChange = (id, checked) => {
-    this.setState({
-      hostChecks: {
-        ...this.state.hostChecks,
-        [id]: checked,
-      },
-    });
-  };
+  handleCheckedHostsChange = (hostChecks) => {
+    this.setState({ hostChecks });
+  }
 
-  handleRackCheckChange = (dcName, rackName, checked) => {
+  handleSelectAll = () => {
     const checks = {};
-    _(this.props.hosts.hosts).forEach(host => {
-      if (host.dc === dcName && host.rack === rackName) {
-        checks[host.id] = checked;
-      }
-    });
-    this.setState({
-      hostChecks: {
-        ...this.state.hostChecks,
-        ...checks,
-      },
-    });
-  };
+    _.forEach(this.props.hosts.hosts, host => checks[host.id] = true);
+    this.setState({ hostChecks: checks });
+  }
 
-  handleDcCheckChange = (dcName, checked) => {
-    const checks = {};
-    _(this.props.hosts.hosts).forEach(host => {
-      if (host.dc === dcName) {
-        checks[host.id] = checked;
-      }
-    });
-    this.setState({
-      hostChecks: {
-        ...this.state.hostChecks,
-        ...checks,
-      },
-    });
-  };
+  handleDeSelectAll = () => {
+    this.setState({ hostChecks: {} });
+  }
 
   render() {
     return (
@@ -64,16 +39,22 @@ class LayerHostList extends React.Component {
         bodyStyle={{ padding: 0 }}
       >
         <Layout.Content style={{ background: '#FFF', padding: '16px' }}>
-          <Button type="primary" onClick={() => this.props.layers.hostAddVisible = true}>创建机器</Button>
+          <Button type="primary" onClick={() => this.props.layers.hostAddVisible = true} style={{ marginRight: '10px' }}>创建机器</Button>
+          <Button.Group style={{ marginRight: '10px' }}>
+            <Button onClick={this.handleSelectAll}>全选</Button>
+            <Button onClick={this.handleDeSelectAll}>取消全选</Button>
+          </Button.Group>
+          <Button.Group style={{ marginRight: '10px' }}>
+            <Button>批量编辑</Button>
+            <Button>批量删除</Button>
+          </Button.Group>
         </Layout.Content>
         <HostView
           hosts={this.props.hosts.hosts}
           clickable
           checkable
           onHostClick={(item) => console.log(item)}
-          onHostCheckChange={this.handleHostCheckChange}
-          onRackCheckChange={this.handleRackCheckChange}
-          onDcCheckChange={this.handleDcCheckChange}
+          onCheckedHostsChange={this.handleCheckedHostsChange}
           checkedHosts={this.state.hostChecks}
         />
       </Drawer>

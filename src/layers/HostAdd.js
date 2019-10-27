@@ -21,11 +21,22 @@ class AddForm extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         if (this.props.onSubmit) {
-          this.props.onSubmit(values);
+          this.props.onSubmit(values, true);
         }
       }
     });
   };
+
+  handleSubmitAndNew = () => {
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        if (this.props.onSubmit) {
+          this.props.onSubmit(values, false);
+          this.handleReset();
+        }
+      }
+    });
+  }
 
   handleReset = () => {
     this.props.form.resetFields();
@@ -34,11 +45,11 @@ class AddForm extends React.Component {
     });
   };
 
-  handleTemplateChange = (value) => {
-    let v = toJS(value);
+  handleTemplateChange = (id) => {
     this.setState({
-      templateValue: v,
+      templateValue: id,
     });
+    let v = toJS(this.props.hosts.hosts[id]);
     this.props.form.setFieldsValue({
       ...v,
       name: '',
@@ -66,10 +77,9 @@ class AddForm extends React.Component {
                 onChange={this.handleTemplateChange}
                 value={this.state.templateValue}
               >
-                {Object.values(this.props.hosts.hosts).map(v2 => {
-                  const v = toJS(v2);
+                {Object.values(this.props.hosts.hosts).map(v => {
                   return (
-                    <Select.Option value={v} label={v.name} key={v.id}>
+                    <Select.Option value={v.id} label={v.name} key={v.id}>
                       <div>{v.name}</div>
                       <div><Typography.Text disabled>{v.username}@{v.host}:{v.port}</Typography.Text></div>
                     </Select.Option>
@@ -182,6 +192,7 @@ class AddForm extends React.Component {
         </Collapse>
         <div style={{ margin: '16px' }}>
           <Button type="primary" onClick={this.handleSubmit}>添加</Button>&nbsp;
+          <Button onClick={this.handleSubmitAndNew}>保存并添加下一个</Button>&nbsp;
           <Button onClick={this.handleReset}>重置</Button>
         </div>
       </Form>
@@ -194,9 +205,11 @@ const AddFormWrapper = Form.create({ name: 'add_form' })(AddForm);
 @inject('layers', 'hosts')
 @observer
 class LayerHostAdd extends React.Component {
-  handleSubmit = values => {
+  handleSubmit = (values, hide) => {
     if (this.props.hosts.addHost(values)) {
-      this.props.layers.hostAddVisible = false;
+      if (hide) {
+        this.props.layers.hostAddVisible = false;
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import { Icon, Col, Row, Card, Typography, Checkbox } from 'antd';
+import { Icon, Col, Row, Card, Typography, Checkbox, Empty, Button } from 'antd';
 import React from 'react';
 import _ from 'lodash';
 import classNames from 'classnames';
@@ -45,7 +45,7 @@ class VisRack extends React.Component {
           ) : null}
           <Icon type="database" /> 机架：{this.props.rackName || '默认'}
         </>}
-        bordered={false}
+        // bordered={false}
         bodyStyle={{ padding: 0 }}
       >
         {this.props.children}
@@ -83,25 +83,56 @@ class VisHost extends React.Component {
 
 @observer
 class HostView extends React.Component {
-  handleHostCheckChange = (id, checked) => {
-    if (this.props.onHostCheckChange) {
-      this.props.onHostCheckChange(id, checked);
+  updateCheckedHost = (checked) => {
+    if (this.props.onCheckedHostsChange) {
+      this.props.onCheckedHostsChange(checked);
     }
+  }
+
+  handleHostCheckChange = (id, checked) => {
+    this.updateCheckedHost({
+      ...this.props.checkedHosts,
+      [id]: checked,
+    });
   };
 
   handleRackCheckChange = (dcName, rackName, checked) => {
-    if (this.props.onRackCheckChange) {
-      this.props.onRackCheckChange(dcName, rackName, checked);
-    }
+    const checks = {};
+    _(this.props.hosts).forEach(host => {
+      if (host.dc === dcName && host.rack === rackName) {
+        checks[host.id] = checked;
+      }
+    });
+    this.updateCheckedHost({
+      ...this.props.checkedHosts,
+      ...checks
+    });
   };
 
   handleDcCheckChange = (dcName, checked) => {
-    if (this.props.onDcCheckChange) {
-      this.props.onDcCheckChange(dcName, checked);
-    }
+    const checks = {};
+    _(this.props.hosts).forEach(host => {
+      if (host.dc === dcName) {
+        checks[host.id] = checked;
+      }
+    });
+    this.updateCheckedHost({
+      ...this.props.checkedHosts,
+      ...checks
+    });
   };
 
   render() {
+    const numberOfHosts = Object.keys(this.props.hosts).length;
+
+    if (numberOfHosts === 0) {
+      return (
+        <div style={{ padding: '50px' }}>
+          <Empty description="您还没有配置机器"></Empty>
+        </div>
+      );
+    }
+
     // Group hosts by DC and Rack
     const groupByDc = _(this.props.hosts)
       .groupBy('dc')
@@ -118,74 +149,76 @@ class HostView extends React.Component {
 
     const allDcs = {};
     const allRacks = {};
-
-    _.forEach(this.props.hosts, host => {
-      if (!allDcs[host.dc]) {
-        allDcs[host.dc] = [];
-      }
-      allDcs[host.dc].push(host);
-      if (!allRacks[host.dc + '|' + host.rack]) {
-        allRacks[host.dc + '|' + host.rack] = [];
-      }
-      allRacks[host.dc + '|' + host.rack].push(host);
-    });
-
     const dcCheckStates = {};
-    for (const dc in allDcs) {
-      let hasChecked = false;
-      let hasUnchecked = false;
-      allDcs[dc].forEach(item => {
-        if (this.props.checkedHosts[item.id]) {
-          hasChecked = true;
-        } else {
-          hasUnchecked = true;
-        }
-      });
-      if (hasChecked && hasUnchecked) {
-        dcCheckStates[dc] = {
-          check: true,
-          indeterminate: true,
-        };
-      } else if (hasChecked) {
-        dcCheckStates[dc] = {
-          check: true,
-          indeterminate: false,
-        };
-      } else if (hasUnchecked) {
-        dcCheckStates[dc] = {
-          check: false,
-          indeterminate: false,
-        };
-      }
-    }
-
     const rackCheckStates = {};
-    for (const rack in allRacks) {
-      console.log('checking', rack);
-      let hasChecked = false;
-      let hasUnchecked = false;
-      allRacks[rack].forEach(item => {
-        if (this.props.checkedHosts[item.id]) {
-          hasChecked = true;
-        } else {
-          hasUnchecked = true;
+
+    if (this.props.checkable) {
+      _.forEach(this.props.hosts, host => {
+        if (!allDcs[host.dc]) {
+          allDcs[host.dc] = [];
         }
+        allDcs[host.dc].push(host);
+        if (!allRacks[host.dc + '|' + host.rack]) {
+          allRacks[host.dc + '|' + host.rack] = [];
+        }
+        allRacks[host.dc + '|' + host.rack].push(host);
       });
-      if (hasChecked && hasUnchecked) {
-        rackCheckStates[rack] = {
-          check: true,
-          indeterminate: true,
-        };
-      } else if (hasChecked) {
-        rackCheckStates[rack] = {
-          check: true,
-          indeterminate: false,
-        };
-      } else if (hasUnchecked) {
-        rackCheckStates[rack] = {
-          check: false,
-          indeterminate: false,
-        };
+
+
+      for (const dc in allDcs) {
+        let hasChecked = false;
+        let hasUnchecked = false;
+        allDcs[dc].forEach(item => {
+          if (this.props.checkedHosts && this.props.checkedHosts[item.id]) {
+            hasChecked = true;
+          } else {
+            hasUnchecked = true;
+          }
+        });
+        if (hasChecked && hasUnchecked) {
+          dcCheckStates[dc] = {
+            check: true,
+            indeterminate: true,
+          };
+        } else if (hasChecked) {
+          dcCheckStates[dc] = {
+            check: true,
+            indeterminate: false,
+          };
+        } else if (hasUnchecked) {
+          dcCheckStates[dc] = {
+            check: false,
+            indeterminate: false,
+          };
+        }
+      }
+
+      for (const rack in allRacks) {
+        let hasChecked = false;
+        let hasUnchecked = false;
+        allRacks[rack].forEach(item => {
+          if (this.props.checkedHosts[item.id]) {
+            hasChecked = true;
+          } else {
+            hasUnchecked = true;
+          }
+        });
+        if (hasChecked && hasUnchecked) {
+          rackCheckStates[rack] = {
+            check: true,
+            indeterminate: true,
+          };
+        } else if (hasChecked) {
+          rackCheckStates[rack] = {
+            check: true,
+            indeterminate: false,
+          };
+        } else if (hasUnchecked) {
+          rackCheckStates[rack] = {
+            check: false,
+            indeterminate: false,
+          };
+        }
       }
     }
 
@@ -196,8 +229,8 @@ class HostView extends React.Component {
             dcName={kv[0]}
             key={kv[0]}
             checkable={this.props.checkable}
-            checked={dcCheckStates[kv[0]].check}
-            checkIndeterminate={dcCheckStates[kv[0]].indeterminate}
+            checked={this.props.checkable && dcCheckStates[kv[0]].check}
+            checkIndeterminate={this.props.checkable && dcCheckStates[kv[0]].indeterminate}
             onCheckChange={(target) => {
               this.handleDcCheckChange(kv[0], target.target.checked)
             }}
@@ -210,8 +243,8 @@ class HostView extends React.Component {
                       rackName={item[0]}
                       key={item[0]}
                       checkable={this.props.checkable}
-                      checked={rackCheckStates[kv[0]+'|'+item[0]].check}
-                      checkIndeterminate={rackCheckStates[kv[0]+'|'+item[0]].indeterminate}
+                      checked={this.props.checkable && rackCheckStates[kv[0]+'|'+item[0]].check}
+                      checkIndeterminate={this.props.checkable && rackCheckStates[kv[0]+'|'+item[0]].indeterminate}
                       onCheckChange={(target) => {
                         this.handleRackCheckChange(kv[0], item[0], target.target.checked)
                       }}
@@ -223,7 +256,7 @@ class HostView extends React.Component {
                           clickable={this.props.clickable}
                           onClick={this.props.onHostClick}
                           checkable={this.props.checkable}
-                          checked={this.props.checkedHosts[host.id]}
+                          checked={this.props.checkable && this.props.checkedHosts[host.id]}
                           onCheckChange={(target) => {
                             this.handleHostCheckChange(host.id, target.target.checked)}
                           }

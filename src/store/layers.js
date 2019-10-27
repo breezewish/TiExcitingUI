@@ -1,7 +1,7 @@
 import { observable } from 'mobx';
 
 class Store {
-  @observable hostListVisible = true;
+  @observable hostListVisible = false;
   @observable hostAddVisible = false;
 }
 
