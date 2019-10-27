@@ -13,17 +13,25 @@ class LayerHostList extends React.Component {
 
   handleCheckedHostsChange = (hostChecks) => {
     this.setState({ hostChecks });
-  }
+  };
 
   handleSelectAll = () => {
     const checks = {};
     _.forEach(this.props.hosts.hosts, host => checks[host.id] = true);
     this.setState({ hostChecks: checks });
-  }
+  };
 
   handleDeSelectAll = () => {
     this.setState({ hostChecks: {} });
-  }
+  };
+
+  handleDeleteAll = () => {
+    for (let id in this.state.hostChecks) {
+      if (this.state.hostChecks[id]) {
+        delete this.props.hosts.hosts[id];
+      }
+    }
+  };
 
   render() {
     return (
@@ -46,7 +54,7 @@ class LayerHostList extends React.Component {
           </Button.Group>
           <Button.Group style={{ marginRight: '10px' }}>
             <Button>批量编辑</Button>
-            <Button>批量删除</Button>
+            <Button onClick={this.handleDeleteAll}>批量删除</Button>
           </Button.Group>
         </Layout.Content>
         <HostView
