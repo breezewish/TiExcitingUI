@@ -28,7 +28,7 @@ class Progress extends React.Component {
     socket.on('task', (res) => {
       console.log('task', res);
 
-      if (res.finished) {
+      if (res.finish) {
         this.setState({ finished: true });
         return;
       }
