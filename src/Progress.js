@@ -1,9 +1,12 @@
 import _ from 'lodash';
 import { Card, Layout, PageHeader, List, Icon, Result } from 'antd';
 import React from 'react';
+import { observer, inject } from 'mobx-react';
 
 import io from 'socket.io-client';
 
+@inject('deployments')
+@observer
 class Progress extends React.Component {
   state = {
     tasks: [],
@@ -11,11 +14,12 @@ class Progress extends React.Component {
   };
 
   componentDidMount() {
-    const id = this.props.match.params.id;
+    const deployId = this.props.match.params.id;
+    const taskId = this.props.deployments.deployments[deployId].taskId;
 
     var socket = io();
     socket.on('connect', () => {
-      socket.emit('deploy', { task_id: id });
+      socket.emit('deploy', { task_id: taskId });
     });
 
     socket.on('sync', (res) => {

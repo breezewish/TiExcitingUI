@@ -165,7 +165,7 @@ class DeployMain extends React.Component {
           try {
             this.props.deployments.deployments[deployInstance.id].taskId = response.data.task_id;
           } catch (e) {}
-          this.props.history.push(`/progress/${response.data.task_id}`);
+          this.props.history.push(`/progress/${deployInstance.id}`);
         } else {
           this.setState({ inSubmitProgress: false });
           Modal.error({
