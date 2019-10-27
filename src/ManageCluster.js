@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { Layout, Menu, Icon, Card, Tag } from 'antd';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { observer, inject } from 'mobx-react';
 import { toJS } from 'mobx';
 import HostView from './components/HostView';
@@ -31,6 +32,13 @@ const componentTags = {
 class ManageCluster extends React.Component {
   state = {
     activeDeployId: null,
+  }
+
+  componentDidMount() {
+    const deployId = this.props.match.params.id;
+    if (deployId) {
+      this.setState({ activeDeployId: deployId });
+    }
   }
 
   handleClick = (e) => {
@@ -87,7 +95,13 @@ class ManageCluster extends React.Component {
             mode="inline"
           >
             { _.map(this.props.deployments.deployments, d => {
-              return <Menu.Item key={d.id}>{d.id}</Menu.Item>
+              return (
+                <Menu.Item key={d.id}>
+                  <NavLink to={`/manage/${d.id}`}>
+                      {d.id}
+                  </NavLink>
+                </Menu.Item>
+              );
             })}
           </Menu>
         </Layout.Sider>

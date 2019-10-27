@@ -25,6 +25,7 @@ export default class App extends Component {
               <DeployMain />
             </Route>
             <Route path="/manage" component={ManageCluster} />
+            <Route path="/manage/:id" component={ManageCluster} />
             <Route path="/progress/:id" component={Progress} />
           </Switch>
         </Layout.Content>

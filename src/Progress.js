@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import { Card, Layout, PageHeader, List, Icon, Result } from 'antd';
+import { Button, Card, Layout, PageHeader, List, Icon, Result } from 'antd';
 import React from 'react';
 import { observer, inject } from 'mobx-react';
+import { NavLink } from 'react-router-dom';
 
 import io from 'socket.io-client';
 
@@ -57,6 +58,8 @@ class Progress extends React.Component {
   }
 
   render() {
+    const deployId = this.props.match.params.id;
+
     const statusMap = {
       finished: <Icon type="check-circle" style={{ color: '#37b24d' }} />,
       unfinished: null,
@@ -66,6 +69,13 @@ class Progress extends React.Component {
       return <Result
         status="success"
         title="集群部署成功！"
+        extra={[
+          <Button type="primary">
+            <NavLink to={`/manage/${deployId}`}>
+            查看集群详情
+            </NavLink>
+          </Button>
+        ]}
       />;
     } else {
       return (

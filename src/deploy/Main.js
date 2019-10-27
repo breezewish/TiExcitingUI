@@ -150,7 +150,7 @@ class DeployMain extends React.Component {
           server_ip: host.host,
           server_port: 20160,
           status_port: 20180,
-          data_dir: `/home/${host.username}/tikv`
+          data_dir: `/home/${host.username}/pd`
         });
       }
     }
