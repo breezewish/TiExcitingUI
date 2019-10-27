@@ -74,7 +74,7 @@ class VisHost extends React.Component {
         ) : null}
         <div className="host-view-vis-host-content">
           <div><Typography.Text>{ this.props.host.name }</Typography.Text></div>
-          <div><Typography.Text disabled>{ this.props.host.username }@{ this.props.host.host }:{ this.props.host.port }</Typography.Text></div>
+          <div><Typography.Text type="secondary">{ this.props.host.username }@{ this.props.host.host }:{ this.props.host.port }</Typography.Text></div>
           {this.props.children}
         </div>
       </div>

@@ -81,7 +81,7 @@ class AddForm extends React.Component {
                   return (
                     <Select.Option value={v.id} label={v.name} key={v.id}>
                       <div>{v.name}</div>
-                      <div><Typography.Text disabled>{v.username}@{v.host}:{v.port}</Typography.Text></div>
+                      <div><Typography.Text type="secondary">{v.username}@{v.host}:{v.port}</Typography.Text></div>
                     </Select.Option>
                   )
                 })}
