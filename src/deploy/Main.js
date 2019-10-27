@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Layout, PageHeader, Tabs } from 'antd';
+import { Layout, PageHeader, Tabs, Modal } from 'antd';
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { withRouter } from 'react-router-dom';
@@ -157,10 +157,17 @@ class DeployMain extends React.Component {
     this.setState({ inSubmitProgress: true });
 
     axios.post('/submitTask', submitData)
-      .then(response => console.log(response));
-
-    // this.props.history.push('/progress/1');
-    // TODO: Start HTTP Request
+      .then(response => {
+        if (response.data && response.data.task_id) {
+          this.props.history.push(`/progress/${response.data.task_id}`);
+        } else {
+          this.setState({ inSubmitProgress: false });
+          Modal.error({
+            title: '递交失败',
+            content: '未知服务器响应 ' + JSON.stringify(response.data),
+          });
+        }
+      });
   }
 
   render() {
