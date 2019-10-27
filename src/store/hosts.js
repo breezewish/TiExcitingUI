@@ -12,7 +12,8 @@ class Store {
       username: 'root',
       password: 'abc',
       port: 22,
-      dc: 'ucloud-1',
+      dc: 'ucloud',
+      rack: 'rack-1',
     });
     this.addHost({
       name: 'uhost-kesclakw',
@@ -20,8 +21,8 @@ class Store {
       username: 'root',
       password: 'abc',
       port: 22,
-      dc: 'ucloud-1',
-      rack: 'test_rack'
+      dc: 'ucloud',
+      rack: 'rack-1',
     });
     this.addHost({
       name: 'uhost-ou3hu5yx',
@@ -29,6 +30,8 @@ class Store {
       username: 'root',
       password: 'abc',
       port: 22,
+      dc: 'ucloud',
+      rack: 'rack-2',
     });
     this.addHost({
       name: 'uhost-x2ofoajg',
@@ -36,8 +39,54 @@ class Store {
       username: 'root',
       password: 'abc',
       port: 22,
-      dc: 'ucloud-1',
-      rack: 'test_rack'
+      dc: 'ucloud',
+      rack: 'rack-2',
+    });
+    this.addHost({
+      name: 'uhost-ahdkyu5j',
+      host: '10.9.106.240',
+      username: 'root',
+      password: 'abc',
+      port: 22,
+      dc: 'ucloud',
+      rack: 'rack-1',
+    });
+    this.addHost({
+      name: 'uhost-keoznqgf',
+      host: '10.9.13.204',
+      username: 'root',
+      password: 'abc',
+      port: 22,
+      dc: 'ucloud',
+      rack: 'rack-2',
+    });
+    this.addHost({
+      host: '192.168.233.128',
+      username: 'tidb',
+      password: '123456',
+      port: 22,
+      dc: 'Tongji',
+    });
+    this.addHost({
+      host: '192.168.233.129',
+      username: 'tidb',
+      password: '123456',
+      port: 22,
+      dc: 'Tongji',
+    });
+    this.addHost({
+      host: '192.168.233.130',
+      username: 'tidb',
+      password: '123456',
+      port: 22,
+      dc: 'Tongji',
+    });
+    this.addHost({
+      host: '192.168.233.131',
+      username: 'tidb',
+      password: '123456',
+      port: 22,
+      dc: 'Tongji',
     });
   }
 
