@@ -7,11 +7,13 @@ import App from './App';
 
 import storeLayers from './store/layers';
 import storeHosts from './store/hosts';
+import storeDeployments from './store/deployments';
 
 ReactDOM.render(
   <BrowserRouter>
     <Provider
       hosts={storeHosts}
+      deployments={storeDeployments}
       layers={storeLayers}
     >
       <App />

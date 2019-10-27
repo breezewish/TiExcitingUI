@@ -21,8 +21,6 @@ class SideMenu extends React.Component {
 
     return (
       <Sider
-        collapsible
-        collapsed={this.state.collapsed} onCollapse={this.onCollapse}
       >
         <div className="logo" />
         <Menu theme="dark" mode="vertical" defaultSelectedKeys={['/']} selectedKeys={[location.pathname]}>

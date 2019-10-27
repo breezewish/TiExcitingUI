@@ -75,6 +75,7 @@ class VisHost extends React.Component {
         <div className="host-view-vis-host-content">
           <div><Typography.Text>{ this.props.host.name }</Typography.Text></div>
           <div><Typography.Text disabled>{ this.props.host.username }@{ this.props.host.host }:{ this.props.host.port }</Typography.Text></div>
+          {this.props.children}
         </div>
       </div>
     );
@@ -260,7 +261,7 @@ class HostView extends React.Component {
                           onCheckChange={(target) => {
                             this.handleHostCheckChange(host.id, target.target.checked)}
                           }
-                        />
+                        >{ this.props.hostChildren ? this.props.hostChildren[host.id] : null }</VisHost>
                       )}
                     </VisRack>
                   </Col>

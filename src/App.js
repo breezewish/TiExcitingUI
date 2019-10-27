@@ -6,6 +6,7 @@ import './App.css';
 
 import Home from './Home';
 import DeployMain from './deploy/Main';
+import Progress from './Progress';
 import LayerHostList from './layers/HostList';
 import LayerHostAdd from './layers/HostAdd';
 
@@ -22,9 +23,7 @@ export default class App extends Component {
             <Route path="/deploy">
               <DeployMain />
             </Route>
-            <Route path="/dashboard">
-              <Home />
-            </Route>
+            <Route path="/progress/:id" component={Progress} />
           </Switch>
         </Layout.Content>
         <LayerHostList />

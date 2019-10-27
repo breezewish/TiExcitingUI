@@ -2,9 +2,12 @@ import _ from 'lodash';
 import { Layout, PageHeader, Tabs } from 'antd';
 import React from 'react';
 import { observer, inject } from 'mobx-react';
+import { withRouter } from 'react-router-dom';
 import DeployHosts from './Hosts';
 import DeployComponents from './Components';
 import DeployViewTopology from './ViewTopology';
+import uniqid from 'uniqid';
+import axios from 'axios';
 
 class Hider extends React.Component {
   render() {
@@ -100,17 +103,65 @@ function organizeComponents(hosts, componentsOriginal) {
 
 @inject('hosts')
 @observer
+@withRouter
 class DeployMain extends React.Component {
+  state = {
+    tabKey: 'hosts',
+    hosts: [],
+    topo: null,
+    inSubmitProgress: false,
+  };
+
   // state = {
-  //   tabKey: 'hosts',
-  //   hosts: [],
+  //   tabKey: 'components',
+  //   hosts: [this.props.hosts.hosts[Object.keys(this.props.hosts.hosts)[0]].id],
+  //   topo: null,
+  //   inSubmitProgress: false,
   // };
 
-  state = {
-    tabKey: 'components',
-    hosts: [this.props.hosts.hosts[Object.keys(this.props.hosts.hosts)[0]].id],
-    topo: null,
-  };
+  handleStartDeploy = () => {
+    const submitData = [];
+    for (let hostId in this.state.topo) {
+      const host = this.props.hosts.hosts[hostId];
+      let c = this.state.topo[hostId];
+      if (c.tidb) {
+        submitData.push({
+          role: 'tidb',
+          server_ip: host.host,
+          server_port: 4000,
+          status_port: 10080,
+          data_dir: `/home/${host.username}/tidb`
+        });
+      }
+      if (c.tikv) {
+        submitData.push({
+          role: 'tikv',
+          server_ip: host.host,
+          server_port: 20160,
+          status_port: 20180,
+          data_dir: `/home/${host.username}/tikv`
+        });
+      }
+      if (c.pd) {
+        submitData.push({
+          pd_id: uniqid(),
+          role: 'pd',
+          server_ip: host.host,
+          server_port: 20160,
+          status_port: 20180,
+          data_dir: `/home/${host.username}/tikv`
+        });
+      }
+    }
+
+    this.setState({ inSubmitProgress: true });
+
+    axios.post('/submitTask', submitData)
+      .then(response => console.log(response));
+
+    // this.props.history.push('/progress/1');
+    // TODO: Start HTTP Request
+  }
 
   render() {
     return (
@@ -149,7 +200,11 @@ class DeployMain extends React.Component {
             }}/>
           </Hider>
           <Hider show={this.state.tabKey === 'view_topo'}>
-            <DeployViewTopology topo={this.state.topo} />
+            <DeployViewTopology
+              topo={this.state.topo}
+              onNextStep={this.handleStartDeploy}
+              inProgress={this.state.inSubmitProgress}
+            />
           </Hider>
         </Layout.Content>
       </Layout>
