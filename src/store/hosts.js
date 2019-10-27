@@ -9,7 +9,7 @@ class Store {
     this.addHost({
       name: 'uhost-ap3kilnh',
       host: '10.9.164.80',
-      username: 'root',
+      username: 'tidb',
       password: 'VQh?dv>c$55c',
       port: 22,
       dc: 'ucloud',
@@ -18,7 +18,7 @@ class Store {
     this.addHost({
       name: 'uhost-kesclakw',
       host: '10.9.136.246',
-      username: 'root',
+      username: 'tidb',
       password: 'VQh?dv>c$55c',
       port: 22,
       dc: 'ucloud',
@@ -27,7 +27,7 @@ class Store {
     this.addHost({
       name: 'uhost-ou3hu5yx',
       host: '10.9.158.146',
-      username: 'root',
+      username: 'tidb',
       password: 'VQh?dv>c$55c',
       port: 22,
       dc: 'ucloud',
@@ -36,7 +36,7 @@ class Store {
     this.addHost({
       name: 'uhost-x2ofoajg',
       host: '10.9.111.178',
-      username: 'root',
+      username: 'tidb',
       password: 'VQh?dv>c$55c',
       port: 22,
       dc: 'ucloud',
@@ -45,7 +45,7 @@ class Store {
     this.addHost({
       name: 'uhost-ahdkyu5j',
       host: '10.9.106.240',
-      username: 'root',
+      username: 'tidb',
       password: 'VQh?dv>c$55c',
       port: 22,
       dc: 'ucloud',
@@ -54,7 +54,7 @@ class Store {
     this.addHost({
       name: 'uhost-keoznqgf',
       host: '10.9.13.204',
-      username: 'root',
+      username: 'tidb',
       password: 'VQh?dv>c$55c',
       port: 22,
       dc: 'ucloud',

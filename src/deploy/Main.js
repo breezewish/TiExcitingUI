@@ -101,7 +101,7 @@ function organizeComponents(hosts, componentsOriginal) {
   return topo;
 }
 
-@inject('hosts')
+@inject('hosts', 'deployments')
 @observer
 @withRouter
 class DeployMain extends React.Component {
@@ -109,6 +109,7 @@ class DeployMain extends React.Component {
     tabKey: 'hosts',
     hosts: [],
     topo: null,
+    config: null,
     inSubmitProgress: false,
   };
 
@@ -154,11 +155,16 @@ class DeployMain extends React.Component {
       }
     }
 
+    const deployInstance = this.props.deployments.addDeployment(this.state.hosts, this.state.config, this.state.topo);
+
     this.setState({ inSubmitProgress: true });
 
     axios.post('/submitTask', submitData)
       .then(response => {
         if (response.data && response.data.task_id) {
+          try {
+            this.props.deployments.deployments[deployInstance.id].taskId = response.data.task_id;
+          } catch (e) {}
           this.props.history.push(`/progress/${response.data.task_id}`);
         } else {
           this.setState({ inSubmitProgress: false });
@@ -167,6 +173,13 @@ class DeployMain extends React.Component {
             content: '未知服务器响应 ' + JSON.stringify(response.data),
           });
         }
+      })
+      .catch(e => {
+        console.log(e);
+        this.setState({ inSubmitProgress: false });
+        Modal.error({
+          title: '递交失败'
+        });
       });
   }
 
@@ -203,6 +216,7 @@ class DeployMain extends React.Component {
                 pd: true,
                 tikv: true,
               });
+              this.setState({ config: configs });
               this.setState({ tabKey: 'view_topo', topo });
             }}/>
           </Hider>

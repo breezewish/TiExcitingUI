@@ -30,8 +30,8 @@ class SideMenu extends React.Component {
               部署
             </NavLink>
           </Menu.Item>
-          <Menu.Item key="/notifications">
-            <NavLink to="/notifications">
+          <Menu.Item key="/manage">
+            <NavLink to="/manage">
               <Icon type="dashboard" />
               集群管理
             </NavLink>

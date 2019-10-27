@@ -9,6 +9,7 @@ import DeployMain from './deploy/Main';
 import Progress from './Progress';
 import LayerHostList from './layers/HostList';
 import LayerHostAdd from './layers/HostAdd';
+import ManageCluster from './ManageCluster';
 
 export default class App extends Component {
   render() {
@@ -23,6 +24,7 @@ export default class App extends Component {
             <Route path="/deploy">
               <DeployMain />
             </Route>
+            <Route path="/manage" component={ManageCluster} />
             <Route path="/progress/:id" component={Progress} />
           </Switch>
         </Layout.Content>

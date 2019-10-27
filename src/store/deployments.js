@@ -13,7 +13,8 @@ class Store {
       topology: JSON.parse(JSON.stringify(topology)),
     };
     this.deployments[d.id] = d;
-    return true;
+    console.log(d);
+    return d;
   }
 }
 
