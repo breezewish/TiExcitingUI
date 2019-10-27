@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Card, Layout, PageHeader, List, Icon } from 'antd';
+import { Card, Layout, PageHeader, List, Icon, Result } from 'antd';
 import React from 'react';
 
 import io from 'socket.io-client';
@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 class Progress extends React.Component {
   state = {
     tasks: [],
+    finished: false,
   };
 
   componentDidMount() {
@@ -19,11 +20,19 @@ class Progress extends React.Component {
 
     socket.on('sync', (res) => {
       console.log('sync', res);
-      this.setState({ tasks: res.task.steps });
+      if (this.state.tasks.length == 0) {
+        this.setState({ tasks: res.task.steps });
+      }
     });
 
     socket.on('task', (res) => {
       console.log('task', res);
+
+      if (res.finished) {
+        this.setState({ finished: true });
+        return;
+      }
+
       this.state.tasks.forEach((task, idx) => {
         if (task.step_id == res.step.step_id) {
           this.state.tasks[idx] = res.step;
@@ -45,36 +54,43 @@ class Progress extends React.Component {
 
   render() {
     const statusMap = {
-      finished: <Icon type="check-circle" spin style={{ color: '#37b24d' }} />,
+      finished: <Icon type="check-circle" style={{ color: '#37b24d' }} />,
       unfinished: null,
       running: <Icon type="loading" spin style={{ color: '#fa5252' }} />,
     };
-    return (
-      <Layout>
-        <Layout.Content style={{ backgroundColor: '#FFF' }}>
-          <PageHeader
-            title="部署进度"
-            subTitle="正在部署集群..."
-          />
-        </Layout.Content>
-        <Layout.Content style={{ padding: '20px' }}>
-          <Card bordered={false}>
-            <List
-              bordered
-              dataSource={this.state.tasks}
-              renderItem={item => (
-                <List.Item style={{ display: 'flex', flexDirection: 'row' }}>
-                  <div style={{ width: '60px' }}>
-                    {statusMap[item.status]}
-                  </div>
-                  <div>{item.msg}</div>
-                </List.Item>
-              )}
+    if (this.state.finished) {
+      return <Result
+        status="success"
+        title="集群部署成功！"
+      />;
+    } else {
+      return (
+        <Layout>
+          <Layout.Content style={{ backgroundColor: '#FFF' }}>
+            <PageHeader
+              title="部署进度"
+              subTitle="正在部署集群..."
             />
-          </Card>
-        </Layout.Content>
-      </Layout>
-    );
+          </Layout.Content>
+          <Layout.Content style={{ padding: '20px' }}>
+            <Card bordered={false}>
+              <List
+                bordered
+                dataSource={this.state.tasks}
+                renderItem={item => (
+                  <List.Item style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ width: '60px' }}>
+                      {statusMap[item.status]}
+                    </div>
+                    <div>{item.msg}</div>
+                  </List.Item>
+                )}
+              />
+            </Card>
+          </Layout.Content>
+        </Layout>
+      );
+    }
   }
 }
 
