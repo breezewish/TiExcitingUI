@@ -25,8 +25,8 @@ class Progress extends React.Component {
     socket.on('task', (res) => {
       console.log('task', res);
       this.state.tasks.forEach((task, idx) => {
-        if (task.step_id == res.step_id) {
-          this.state.tasks[idx] = task;
+        if (task.step_id == res.step.step_id) {
+          this.state.tasks[idx] = res.step;
         }
       });
       this.setState({ tasks: [...this.state.tasks] });
